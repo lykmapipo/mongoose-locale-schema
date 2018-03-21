@@ -4,9 +4,9 @@
 [![Dependencies Status](https://david-dm.org/lykmapipo/mongoose-locale-schema/status.svg)](https://david-dm.org/lykmapipo/mongoose-locale-schema)
 [![npm version](https://badge.fury.io/js/mongoose-locale-schema.svg)](https://badge.fury.io/js/mongoose-locale-schema)
 
-mongoose schema to support multi-language fields.
+mongoose schema to support multi-locale fields.
 
-*Note: All locales(languages) will added as single-embedded document(sub-schema)*
+*Note: All locales will added as single-embedded document(sub-schema)*
 
 ## Requirements
 
