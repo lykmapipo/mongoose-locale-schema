@@ -1,8 +1,9 @@
 {
   "name": "mongoose-locale-schema",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "mongoose schema to support multi-locale fields",
   "keywords": [
+    "lykmapipo",
     "mongoose",
     "mongoose-plugin",
     "language",
@@ -35,15 +36,15 @@
   ],
   "devDependencies": {
     "chai": "^4.1.2",
-    "grunt": "^1.0.2",
+    "grunt": "^1.0.3",
     "grunt-contrib-jshint": "^1.1.0",
-    "grunt-contrib-watch": "^1.0.1",
+    "grunt-contrib-watch": "^1.1.0",
     "grunt-mocha-test": "^0.13.3",
     "jshint-stylish": "^2.2.1",
-    "mocha": "^5.1.1"
+    "mocha": "^5.2.0",
+    "mongoose": "^5.1.7"
   },
   "dependencies": {
-    "lodash": "^4.17.10",
-    "mongoose": "^5.0.17"
+    "lodash": "^4.17.10"
   }
 }

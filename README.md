@@ -14,7 +14,7 @@ mongoose schema to support multi-locale fields.
 
 ## Install
 ```sh
-$ npm install --save mongoose-locale-schema
+$ npm install --save mongoose mongoose-locale-schema
 ```
 
 ## Usage
@@ -24,15 +24,16 @@ const mongoose = require('mongoose');
 const localize = require('mongoose-locale-schema');
 const Schema = mongoose.Schema;
 
-...
 
-const Product = new Schema({
+//schema definition
+const ProductSchema = new Schema({
   name: localize({ locales: ['en', 'sw'] })
   description: localize({ locales: ['en', 'sw'] })
 });
+const Product = mongoose.model('Product', ProductSchema);
 
-....
 
+//save with multiple locales
 const product = new Product({
   name: {
     en: 'Tomato',
@@ -44,7 +45,9 @@ const product = new Product({
   }
 });
 
-product.save(cb);
+product.save(done);
+
+...
 
 ```
 

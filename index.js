@@ -18,9 +18,11 @@ const Schema = mongoose.Schema;
 
 
 //defaults
-const defaults = { type: String, trim: true, required: false, searchable: true };
 const locale = ['en'];
-const schemaOptions = { timestamps: false, _id: false, id: false };
+const defaults =
+  ({ type: String, trim: true, required: false, searchable: true });
+const schemaOptions =
+  ({ timestamps: false, _id: false, id: false });
 
 
 /**
@@ -40,14 +42,33 @@ const schemaOptions = { timestamps: false, _id: false, id: false };
  * const localize = require('mongoose-locale-schema');
  * const Schema = mongoose.Schema;
  *
- * const Product = new Schema({
- * 	name: localize({type: String, index: true, locales:['en', 'sw']})
- * 	description: localize({
- * 			type: String, 
- * 		 	index: true, 
- * 		  	locales:[{name: 'en', required: true}, {name: 'sw'}]
- * 		})
+ * 
+ * const ProductSchema = new Schema({
+ *  name: localize({ 
+ *    type: String, 
+ *    index: true, 
+ *    locales:['en', 'sw']
+ *  })
+ *  description: localize({
+ *    type: String, 
+ *    index: true, 
+ *    locales:[{name: 'en', required: true}, {name: 'sw'}]
+ *   })
  * });
+ * const Product = mongoose.model('Product', ProductSchema);
+ *
+ * const product = new Product({
+ *  name: {
+ *    en: 'Tomato',
+ *    sw: 'Nyanya'
+ *  },
+ *  description: {
+ *    en: 'Best in Town',
+ *    sw: 'Habari ya Mjini'
+ *  }
+ * });
+ * product.save(done);
+ * 
  */
 module.exports = exports = function localize(optns) {
 
