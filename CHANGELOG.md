@@ -1,3 +1,11 @@
+#### 0.2.3 (2019-05-01)
+
+##### Chores
+
+* **.npmrc:**  prevent npm version to commit and tag version ([f19061dc](https://github.com/lykmapipo/mongoose-locale-schema/commit/f19061dcedde452574a1267107b26ed7315eb1e7))
+* **deps:**  force latest version & audit fix ([c6ad2dd8](https://github.com/lykmapipo/mongoose-locale-schema/commit/c6ad2dd8fddfa36b71e147373bcfa30cd2b0754b))
+* **ci:**  force latest nodejs ([91b1e20e](https://github.com/lykmapipo/mongoose-locale-schema/commit/91b1e20ec6e97cd9a8de03a4da594bc203af638b))
+
 #### 0.2.2 (2019-04-16)
 
 ##### Chores
