@@ -43,10 +43,10 @@
     "jshint-stylish": "^2.2.1",
     "lodash": "^4.17.11",
     "mocha": "^6.1.4",
-    "mongoose": ">=5.5.5"
+    "mongoose": ">=5.5.7"
   },
   "peerDependencies": {
-    "mongoose": ">=5.5.5"
+    "mongoose": ">=5.5.7"
   },
   "dependencies": {
     "lodash": ">=4.17.11"
