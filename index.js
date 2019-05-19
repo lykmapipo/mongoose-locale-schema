@@ -11,14 +11,16 @@
  */
 
 
-//dependencies
+/* dependencies */
 const _ = require('lodash');
 const { mergeObjects } = require('@lykmapipo/common');
+const { getString, getStrings } = require('@lykmapipo/env');
 const { createSubSchema } = require('@lykmapipo/mongoose-common');
 
 
-//defaults
-const locale = ['en'];
+/* prepare */
+const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
+const LOCALES = getStrings('LOCALES', DEFAULT_LOCALE);
 const defaults =
   ({ type: String, trim: true, required: false, searchable: true });
 
@@ -75,7 +77,7 @@ module.exports = exports = function localize(optns) {
 
 
   //prepare & normalize locales
-  let locales = _.uniq(_.compact([].concat(options.locales || locale)));
+  let locales = _.uniq(_.compact([].concat(options.locales || LOCALES)));
   locales = _.map(locales, function (locale) {
     //handle: string locale definition
     if (_.isString(locale)) {
