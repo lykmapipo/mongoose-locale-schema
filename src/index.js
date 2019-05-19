@@ -1,4 +1,11 @@
-import _ from 'lodash';
+import {
+  compact,
+  forEach,
+  isEmpty,
+  isString,
+  isPlainObject,
+  map,
+} from 'lodash';
 import { mergeObjects, uniq } from '@lykmapipo/common';
 import { getString, getStrings } from '@lykmapipo/env';
 import { createSubSchema } from '@lykmapipo/mongoose-common';
@@ -40,13 +47,13 @@ const SCHEMATYPE_DEFAULTS = {
  */
 const mapLocaleToSchemaTypeOptions = locale => {
   // handle: string locale definition
-  if (_.isString(locale)) {
+  if (isString(locale)) {
     const required = locale === DEFAULT_LOCALE;
     return { name: locale, required };
   }
 
   // handle: plain object locale definition
-  if (_.isPlainObject(locale)) {
+  if (isPlainObject(locale)) {
     const required = locale.name === DEFAULT_LOCALE;
     return mergeObjects({ required }, locale);
   }
@@ -110,12 +117,12 @@ const localize = optns => {
   const { locales, ...schemaTypeOptions } = options;
 
   // prepare & normalize locales
-  let copyOfLocales = uniq([...(!_.isEmpty(locales) ? locales : LOCALES)]);
-  copyOfLocales = _.compact(_.map(copyOfLocales, mapLocaleToSchemaTypeOptions));
+  let copyOfLocales = uniq([...(!isEmpty(locales) ? locales : LOCALES)]);
+  copyOfLocales = compact(map(copyOfLocales, mapLocaleToSchemaTypeOptions));
 
   // prepare per locale schema fields
   const fields = {};
-  _.forEach(copyOfLocales, locale => {
+  forEach(copyOfLocales, locale => {
     const { name, ...localeOptions } = locale;
     fields[name] = mergeObjects(schemaTypeOptions, localeOptions);
   });
