@@ -1,7 +1,6 @@
 'use strict';
 
-
-//dependencies
+/* dependencies */
 const { expect } = require('@lykmapipo/mongoose-test-helpers');
 const path = require('path');
 const localize = require(path.join(__dirname, '..'));

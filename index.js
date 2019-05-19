@@ -13,16 +13,14 @@
 
 //dependencies
 const _ = require('lodash');
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { mergeObjects } = require('@lykmapipo/common');
+const { createSubSchema } = require('@lykmapipo/mongoose-common');
 
 
 //defaults
 const locale = ['en'];
 const defaults =
   ({ type: String, trim: true, required: false, searchable: true });
-const schemaOptions =
-  ({ timestamps: false, _id: false, id: false });
 
 
 /**
@@ -85,7 +83,7 @@ module.exports = exports = function localize(optns) {
     }
     //handle: object locale definition
     else if (_.isPlainObject(locale)) {
-      return _.merge({}, { required: false }, locale);
+      return mergeObjects({ required: false }, locale);
     }
     //ignore: not valid locale definition
     else {
@@ -98,11 +96,11 @@ module.exports = exports = function localize(optns) {
   //prepare per locale schema fields
   let fields = {};
   _.forEach(locales, function (locale) {
-    fields[locale.name] = _.merge({}, options, _.omit(locale, ['name']));
+    fields[locale.name] = mergeObjects(options, _.omit(locale, ['name']));
   });
 
   //build field as sub-schema
-  const schema = new Schema(fields, schemaOptions);
+  const schema = createSubSchema(fields);
 
   return schema;
 
