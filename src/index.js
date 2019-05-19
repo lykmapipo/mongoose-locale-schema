@@ -79,11 +79,10 @@ const mapLocaleToSchemaTypeOptions = locale => {
  * @public
  * @example
  *
- * const mongoose = require('mongoose');
+ * const { model, Schema } = require('@lykmapipo/mongoose-common');
  * const localize = require('mongoose-locale-schema');
- * const Schema = mongoose.Schema;
  *
- *
+ * // schema definition
  * const ProductSchema = new Schema({
  *  name: localize({
  *    type: String,
@@ -96,19 +95,16 @@ const mapLocaleToSchemaTypeOptions = locale => {
  *    locales:[{name: 'en', required: true}, {name: 'sw'}]
  *   })
  * });
- * const Product = mongoose.model('Product', ProductSchema);
+ * const Product = model('Product', ProductSchema);
  *
+ * // instantiate multiple locales
  * const product = new Product({
- *  name: {
- *    en: 'Tomato',
- *    sw: 'Nyanya'
- *  },
- *  description: {
- *    en: 'Best in Town',
- *    sw: 'Habari ya Mjini'
- *  }
+ *  name: { en: 'Tomato', sw: 'Nyanya' },
+ *  description: { en: 'Best in Town', sw: 'Habari ya Mjini' }
  * });
- * product.save(done);
+ *
+ * // save with multiple locales
+ * product.save((error, saved)=> { ... });
  *
  */
 const localize = optns => {
