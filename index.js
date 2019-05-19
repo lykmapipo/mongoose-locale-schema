@@ -30,7 +30,7 @@ const SCHEMATYPE_DEFAULTS = {
  * @see {@link http://mongoosejs.com/docs/subdocs.html}
  * @author lally elias <lallyelias87@mail.com>
  * @since 0.1.0
- * @version 0.1.0
+ * @version 0.2.0
  * @example
  * 
  * const mongoose = require('mongoose');
