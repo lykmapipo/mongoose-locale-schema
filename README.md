@@ -9,46 +9,35 @@ mongoose schema to support multi-locale fields.
 *Note: All locales will added as single-embedded document(sub-schema)*
 
 ## Requirements
-
-- NodeJS v9.3+
+- [NodeJS v8.11.1+](https://nodejs.org)
+- [npm v5.6.0+](https://www.npmjs.com/)
 
 ## Install
 ```sh
-$ npm install --save mongoose mongoose-locale-schema
+$ npm install --save mongoose-locale-schema
 ```
 
 ## Usage
 
-```javascript
-const mongoose = require('mongoose');
+```js
+const { model, Schema } = require('@lykmapipo/mongoose-common');
 const localize = require('mongoose-locale-schema');
-const Schema = mongoose.Schema;
 
-
-//schema definition
+// schema definition
 const ProductSchema = new Schema({
-  name: localize({ locales: ['en', 'sw'] })
-  description: localize({ locales: ['en', 'sw'] })
+    name: localize({ locales: ['en', 'sw'] }),
+    description: localize({ locales: ['en', 'sw'] })
 });
-const Product = mongoose.model('Product', ProductSchema);
+const Product = model('Product', ProductSchema);
 
-
-//save with multiple locales
+// instantiate multiple locales
 const product = new Product({
-  name: {
-    en: 'Tomato',
-    sw: 'Nyanya'
-  },
-  description: {
-    en: 'Best in Town',
-    sw: 'Habari ya Mjini'
-  }
+    name: { en: 'Tomato', sw: 'Nyanya' },
+    description: { en: 'Best in Town', sw: 'Habari ya Mjini' }
 });
 
-product.save(done);
-
-...
-
+// save with multiple locales
+product.save((error, saved) => { ... });
 ```
 
 ## Testing
