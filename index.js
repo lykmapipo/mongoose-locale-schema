@@ -1,5 +1,6 @@
 'use strict';
 
+
 /* dependencies */
 const _ = require('lodash');
 const { mergeObjects, uniq } = require('@lykmapipo/common');
@@ -20,17 +21,62 @@ const SCHEMATYPE_DEFAULTS = {
 
 
 /**
+ * @function mapLocaleToSchemaTypeOptions
+ * @name mapLocaleToSchemaTypeOptions
+ * @description Map provided locale options to valid schematype options
+ * @param {Object|String} locale valid locale to use as schema field
+ * @return {Object} valid schematype options
+ * @author lally elias <lallyelias87@mail.com>
+ * @license MIT
+ * @since 0.3.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const options = mapLocaleToSchemaTypeOptions('en');
+ * //=> { name: 'en', required: false };
+ *
+ * const options = mapLocaleToSchemaTypeOptions({name: 'en'});
+ * //=> { name: 'en', required: false }
+ *
+ * const options = mapLocaleToSchemaTypeOptions({name: 'en', required: true });
+ * //=> { name: 'en', required: true }
+ * 
+ */
+const mapLocaleToSchemaTypeOptions = locale => {
+  // handle: string locale definition
+  if (_.isString(locale)) {
+    const required = locale === DEFAULT_LOCALE ? true : false;
+    return { name: locale, required };
+  }
+  // handle: plain object locale definition
+  else if (_.isPlainObject(locale)) {
+    const required = locale.name === DEFAULT_LOCALE ? true : false;
+    return mergeObjects({ required }, locale);
+  }
+  // ignore: not valid locale definition
+  else {
+    return undefined;
+  }
+};
+
+
+/**
+ * @function localize
  * @name localize
- * @type {Function}
  * @description factory to create localized schema fields
  * @param {Object} [options] valid mongoose schema type options
  * @param {Array} [options.locales] valid mongoose schema type options
- * @return {Schema} valid mongoose schema
+ * @return {Schema} valid mongoose sub schema
  * @see {@link http://mongoosejs.com/docs/schematypes.html}
  * @see {@link http://mongoosejs.com/docs/subdocs.html}
  * @author lally elias <lallyelias87@mail.com>
+ * @license MIT
  * @since 0.1.0
  * @version 0.2.0
+ * @static
+ * @public
  * @example
  * 
  * const mongoose = require('mongoose');
@@ -71,22 +117,9 @@ module.exports = exports = function localize(optns) {
   const options = mergeObjects(SCHEMATYPE_DEFAULTS, optns);
 
   // prepare & normalize locales
-  let locales = uniq([].concat(options.locales || LOCALES));
-  locales = _.map(locales, function (locale) {
-    // handle: string locale definition
-    if (_.isString(locale)) {
-      return { name: locale, required: false };
-    }
-    // handle: object locale definition
-    else if (_.isPlainObject(locale)) {
-      return mergeObjects({ required: false }, locale);
-    }
-    // ignore: not valid locale definition
-    else {
-      return undefined;
-    }
-  });
-  locales = _.compact(locales);
+  let locales = !_.isEmpty(options.locales) ? options.locales : LOCALES;
+  locales = uniq([...locales]);
+  locales = _.compact(_.map(locales, mapLocaleToSchemaTypeOptions));
   delete options.locales;
 
   // prepare per locale schema fields

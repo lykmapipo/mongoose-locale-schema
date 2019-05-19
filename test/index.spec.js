@@ -28,7 +28,7 @@ describe('localize', () => {
     expect(en).to.be.an('object');
     expect(en.type).to.be.a('function');
     expect(en.type.name).to.be.equal('String');
-    expect(en.required).to.be.false;
+    expect(en.required).to.be.true;
     expect(en.trim).to.be.true;
     expect(en.index).to.be.undefined;
     expect(en.searchable).to.be.true;
@@ -66,7 +66,7 @@ describe('localize', () => {
     expect(en).to.be.an('object');
     expect(en.type).to.be.a('function');
     expect(en.type.name).to.be.equal('String');
-    expect(en.required).to.be.false;
+    expect(en.required).to.be.true;
     expect(en.trim).to.be.true;
     expect(en.index).to.be.undefined;
     expect(en.searchable).to.be.true;
@@ -98,7 +98,7 @@ describe('localize', () => {
     expect(en).to.be.an('object');
     expect(en.type).to.be.a('function');
     expect(en.type.name).to.be.equal('String');
-    expect(en.required).to.be.false;
+    expect(en.required).to.be.true;
     expect(en.trim).to.be.true;
     expect(en.index).to.be.true;
     expect(en.searchable).to.be.true;
