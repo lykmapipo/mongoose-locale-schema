@@ -35,6 +35,7 @@
     }
   ],
   "devDependencies": {
+    "@lykmapipo/mongoose-test-helpers": "^0.7.2",
     "chai": "^4.2.0",
     "grunt": "^1.0.4",
     "grunt-contrib-jshint": "^2.1.0",
@@ -42,8 +43,7 @@
     "grunt-mocha-test": "^0.13.3",
     "jshint-stylish": "^2.2.1",
     "mocha": "^6.1.4",
-    "mongoose": ">=5.5.9",
-    "mongoose-test-helpers": "^0.1.0"
+    "mongoose": ">=5.5.9"
   },
   "peerDependencies": {
     "mongoose": ">=5.5.9"

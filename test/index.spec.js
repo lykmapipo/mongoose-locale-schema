@@ -2,8 +2,8 @@
 
 
 //dependencies
+const { expect } = require('@lykmapipo/mongoose-test-helpers');
 const path = require('path');
-const expect = require('chai').expect;
 const localize = require(path.join(__dirname, '..'));
 
 
