@@ -1,19 +1,8 @@
 'use strict';
 
-
-/**
- * @module mongoose-locale-schema
- * @description mongoose schema to support multi-language fields
- * @return {Schema} valid mongoose schema
- * @author lally elias <lallyelias87@mail.com>
- * @since  0.1.0
- * @version 0.1.0
- */
-
-
 /* dependencies */
 const _ = require('lodash');
-const { mergeObjects } = require('@lykmapipo/common');
+const { mergeObjects, uniq } = require('@lykmapipo/common');
 const { getString, getStrings } = require('@lykmapipo/env');
 const { createSubSchema } = require('@lykmapipo/mongoose-common');
 
@@ -21,8 +10,13 @@ const { createSubSchema } = require('@lykmapipo/mongoose-common');
 /* prepare */
 const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
 const LOCALES = getStrings('LOCALES', DEFAULT_LOCALE);
-const defaults =
-  ({ type: String, trim: true, required: false, searchable: true });
+const SCHEMATYPE_DEFAULTS = {
+  type: String,
+  trim: true,
+  required: false,
+  searchable: true,
+  taggable: true
+};
 
 
 /**
@@ -74,11 +68,10 @@ const defaults =
 module.exports = exports = function localize(optns) {
 
   // normalize options
-  const options = mergeObjects(defaults, optns);
-
+  const options = mergeObjects(SCHEMATYPE_DEFAULTS, optns);
 
   // prepare & normalize locales
-  let locales = _.uniq(_.compact([].concat(options.locales || LOCALES)));
+  let locales = uniq([].concat(options.locales || LOCALES));
   locales = _.map(locales, function (locale) {
     // handle: string locale definition
     if (_.isString(locale)) {
