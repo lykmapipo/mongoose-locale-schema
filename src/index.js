@@ -1,12 +1,7 @@
-'use strict';
-
-
-/* dependencies */
-const _ = require('lodash');
-const { mergeObjects, uniq } = require('@lykmapipo/common');
-const { getString, getStrings } = require('@lykmapipo/env');
-const { createSubSchema } = require('@lykmapipo/mongoose-common');
-
+import _ from 'lodash';
+import { mergeObjects, uniq } from '@lykmapipo/common';
+import { getString, getStrings } from '@lykmapipo/env';
+import { createSubSchema } from '@lykmapipo/mongoose-common';
 
 /* prepare */
 const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
@@ -16,9 +11,8 @@ const SCHEMATYPE_DEFAULTS = {
   trim: true,
   required: false,
   searchable: true,
-  taggable: true
+  taggable: true,
 };
-
 
 /**
  * @function mapLocaleToSchemaTypeOptions
@@ -42,25 +36,24 @@ const SCHEMATYPE_DEFAULTS = {
  *
  * const options = mapLocaleToSchemaTypeOptions({name: 'en', required: true });
  * //=> { name: 'en', required: true }
- * 
+ *
  */
 const mapLocaleToSchemaTypeOptions = locale => {
   // handle: string locale definition
   if (_.isString(locale)) {
-    const required = locale === DEFAULT_LOCALE ? true : false;
+    const required = locale === DEFAULT_LOCALE;
     return { name: locale, required };
   }
+
   // handle: plain object locale definition
-  else if (_.isPlainObject(locale)) {
-    const required = locale.name === DEFAULT_LOCALE ? true : false;
+  if (_.isPlainObject(locale)) {
+    const required = locale.name === DEFAULT_LOCALE;
     return mergeObjects({ required }, locale);
   }
-  // ignore: not valid locale definition
-  else {
-    return undefined;
-  }
-};
 
+  // ignore: not valid locale definition
+  return undefined;
+};
 
 /**
  * @function localize
@@ -78,21 +71,21 @@ const mapLocaleToSchemaTypeOptions = locale => {
  * @static
  * @public
  * @example
- * 
+ *
  * const mongoose = require('mongoose');
  * const localize = require('mongoose-locale-schema');
  * const Schema = mongoose.Schema;
  *
- * 
+ *
  * const ProductSchema = new Schema({
- *  name: localize({ 
- *    type: String, 
- *    index: true, 
+ *  name: localize({
+ *    type: String,
+ *    index: true,
  *    locales:['en', 'sw']
  *  })
  *  description: localize({
- *    type: String, 
- *    index: true, 
+ *    type: String,
+ *    index: true,
  *    locales:[{name: 'en', required: true}, {name: 'sw'}]
  *   })
  * });
@@ -109,28 +102,30 @@ const mapLocaleToSchemaTypeOptions = locale => {
  *  }
  * });
  * product.save(done);
- * 
+ *
  */
-module.exports = exports = function localize(optns) {
-
+const localize = optns => {
   // normalize options
   const options = mergeObjects(SCHEMATYPE_DEFAULTS, optns);
+  const { locales, ...schemaTypeOptions } = options;
 
   // prepare & normalize locales
-  let locales = !_.isEmpty(options.locales) ? options.locales : LOCALES;
-  locales = uniq([...locales]);
-  locales = _.compact(_.map(locales, mapLocaleToSchemaTypeOptions));
-  delete options.locales;
+  let copyOfLocales = uniq([...(!_.isEmpty(locales) ? locales : LOCALES)]);
+  copyOfLocales = _.compact(_.map(copyOfLocales, mapLocaleToSchemaTypeOptions));
 
   // prepare per locale schema fields
-  let fields = {};
-  _.forEach(locales, function (locale) {
-    fields[locale.name] = mergeObjects(options, _.omit(locale, ['name']));
+  const fields = {};
+  _.forEach(copyOfLocales, locale => {
+    const { name, ...localeOptions } = locale;
+    fields[name] = mergeObjects(schemaTypeOptions, localeOptions);
   });
 
-  // build field as sub-schema
+  // build fields as sub-schema
   const schema = createSubSchema(fields);
 
+  // return created sub-schema
   return schema;
-
 };
+
+/* export localize */
+export default localize;
