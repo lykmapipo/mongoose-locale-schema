@@ -29,15 +29,16 @@ const defaults =
  * @name localize
  * @type {Function}
  * @description factory to create localized schema fields
- * @param  {Object} [options] valid mongoose schema type options
- * @param  {Array} [options.locales] valid mongoose schema type options
+ * @param {Object} [options] valid mongoose schema type options
+ * @param {Array} [options.locales] valid mongoose schema type options
  * @return {Schema} valid mongoose schema
- * @see  {@link http://mongoosejs.com/docs/schematypes.html}
+ * @see {@link http://mongoosejs.com/docs/schematypes.html}
  * @see {@link http://mongoosejs.com/docs/subdocs.html}
  * @author lally elias <lallyelias87@mail.com>
- * @since  0.1.0
+ * @since 0.1.0
  * @version 0.1.0
  * @example
+ * 
  * const mongoose = require('mongoose');
  * const localize = require('mongoose-locale-schema');
  * const Schema = mongoose.Schema;
@@ -72,22 +73,22 @@ const defaults =
  */
 module.exports = exports = function localize(optns) {
 
-  //normalize options
-  const options = _.merge({}, defaults, optns);
+  // normalize options
+  const options = mergeObjects(defaults, optns);
 
 
-  //prepare & normalize locales
+  // prepare & normalize locales
   let locales = _.uniq(_.compact([].concat(options.locales || LOCALES)));
   locales = _.map(locales, function (locale) {
-    //handle: string locale definition
+    // handle: string locale definition
     if (_.isString(locale)) {
       return { name: locale, required: false };
     }
-    //handle: object locale definition
+    // handle: object locale definition
     else if (_.isPlainObject(locale)) {
       return mergeObjects({ required: false }, locale);
     }
-    //ignore: not valid locale definition
+    // ignore: not valid locale definition
     else {
       return undefined;
     }
@@ -95,13 +96,13 @@ module.exports = exports = function localize(optns) {
   locales = _.compact(locales);
   delete options.locales;
 
-  //prepare per locale schema fields
+  // prepare per locale schema fields
   let fields = {};
   _.forEach(locales, function (locale) {
     fields[locale.name] = mergeObjects(options, _.omit(locale, ['name']));
   });
 
-  //build field as sub-schema
+  // build field as sub-schema
   const schema = createSubSchema(fields);
 
   return schema;
