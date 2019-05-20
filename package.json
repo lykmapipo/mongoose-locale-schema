@@ -45,7 +45,7 @@
   },
   "homepage": "https://github.com/lykmapipo/mongoose-locale-schema",
   "devDependencies": {
-    "@lykmapipo/mongoose-test-helpers": "^0.7.2",
+    "@lykmapipo/mongoose-test-helpers": "^0.7.3",
     "mongoose": ">=5.5.9",
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
@@ -77,9 +77,9 @@
     "mongoose": ">=5.5.9"
   },
   "dependencies": {
-    "@lykmapipo/common": ">=0.17.4",
-    "@lykmapipo/env": ">=0.7.6",
-    "@lykmapipo/mongoose-common": ">=0.23.0",
+    "@lykmapipo/common": ">=0.17.5",
+    "@lykmapipo/env": ">=0.7.7",
+    "@lykmapipo/mongoose-common": ">=0.23.1",
     "lodash": ">=4.17.11"
   },
   "engines": {
