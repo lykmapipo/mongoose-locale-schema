@@ -1,3 +1,17 @@
+#### 0.3.1 (2019-05-20)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([1ed90494](https://github.com/lykmapipo/mongoose-locale-schema/commit/1ed90494dd48e9ce1ee18149f2e28ae21486149b))
+
+##### Refactors
+
+*  import only used lodash modules ([5979aaf5](https://github.com/lykmapipo/mongoose-locale-schema/commit/5979aaf50bda085756006e3a063f526a851a48df))
+
+##### Code Style Changes
+
+*  improve jsdocs ([aed0201d](https://github.com/lykmapipo/mongoose-locale-schema/commit/aed0201dfad6e5ecb5d37982d160a483a45ca103))
+
 #### 0.3.0 (2019-05-19)
 
 ##### Chores
