@@ -1,6 +1,6 @@
 import { SchemaTypes, Schema } from '@lykmapipo/mongoose-common';
 import { expect, faker } from '@lykmapipo/mongoose-test-helpers';
-import { localize, localizedValuesFor } from '../src/index';
+import { localize, localizedKeysFor, localizedValuesFor } from '../src/index';
 
 describe('localize', () => {
   it('should be a factory function', () => {
@@ -163,6 +163,15 @@ describe('localize', () => {
     expect(sw.options.index).to.be.undefined;
     expect(sw.options.searchable).to.be.true;
     expect(sw.options.taggable).to.be.true;
+  });
+
+  it('should generate path localized field names', () => {
+    expect(localizedKeysFor).to.exist;
+    expect(localizedKeysFor).to.be.a('function');
+
+    const names = localizedKeysFor('name');
+    expect(names).to.exist.and.be.an('array');
+    expect(names).to.contain('name.en');
   });
 
   it('should normalize value for all locales', () => {

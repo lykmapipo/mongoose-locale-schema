@@ -8,7 +8,7 @@ import {
   map,
   values,
 } from 'lodash';
-import { isNotValue, mergeObjects, uniq } from '@lykmapipo/common';
+import { isNotValue, mergeObjects, uniq, sortedUniq } from '@lykmapipo/common';
 import { getString, getStrings } from '@lykmapipo/env';
 import { createSubSchema, copyInstance } from '@lykmapipo/mongoose-common';
 
@@ -130,6 +130,29 @@ export const localize = optns => {
 
   // return created sub-schema
   return schema;
+};
+
+/**
+ * @function localizedKeysFor
+ * @name localizedKeysFor
+ * @description Generate locale fields name of a given path
+ * @param {String} path valid schema path
+ * @return {Array} sorted set of localized fields
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * localizedKeysFor('name');
+ * // => ['name.en', 'name.sw']
+ *
+ */
+export const localizedKeysFor = path => {
+  const fields = map(LOCALES, locale => `${path}.${locale}`);
+  return sortedUniq(fields);
 };
 
 /**
