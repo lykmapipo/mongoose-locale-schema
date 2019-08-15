@@ -1,7 +1,7 @@
-import _ from 'lodash';
-import { mergeObjects, uniq } from '@lykmapipo/common';
+import { isEmpty, map, forEach, first, values, isString, isPlainObject } from 'lodash';
+import { mergeObjects, uniq, compact, sortedUniq, isNotValue, abbreviate } from '@lykmapipo/common';
 import { getString, getStrings } from '@lykmapipo/env';
-import { createSubSchema } from '@lykmapipo/mongoose-common';
+import { createSubSchema, copyInstance } from '@lykmapipo/mongoose-common';
 
 /* prepare */
 const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
@@ -40,13 +40,13 @@ const SCHEMATYPE_DEFAULTS = {
  */
 const mapLocaleToSchemaTypeOptions = locale => {
   // handle: string locale definition
-  if (_.isString(locale)) {
+  if (isString(locale)) {
     const required = locale === DEFAULT_LOCALE;
     return { name: locale, required };
   }
 
   // handle: plain object locale definition
-  if (_.isPlainObject(locale)) {
+  if (isPlainObject(locale)) {
     const required = locale.name === DEFAULT_LOCALE;
     return mergeObjects({ required }, locale);
   }
@@ -72,11 +72,10 @@ const mapLocaleToSchemaTypeOptions = locale => {
  * @public
  * @example
  *
- * const mongoose = require('mongoose');
+ * const { model, Schema } = require('@lykmapipo/mongoose-common');
  * const localize = require('mongoose-locale-schema');
- * const Schema = mongoose.Schema;
  *
- *
+ * // schema definition
  * const ProductSchema = new Schema({
  *  name: localize({
  *    type: String,
@@ -89,19 +88,16 @@ const mapLocaleToSchemaTypeOptions = locale => {
  *    locales:[{name: 'en', required: true}, {name: 'sw'}]
  *   })
  * });
- * const Product = mongoose.model('Product', ProductSchema);
+ * const Product = model('Product', ProductSchema);
  *
+ * // instantiate multiple locales
  * const product = new Product({
- *  name: {
- *    en: 'Tomato',
- *    sw: 'Nyanya'
- *  },
- *  description: {
- *    en: 'Best in Town',
- *    sw: 'Habari ya Mjini'
- *  }
+ *  name: { en: 'Tomato', sw: 'Nyanya' },
+ *  description: { en: 'Best in Town', sw: 'Habari ya Mjini' }
  * });
- * product.save(done);
+ *
+ * // save with multiple locales
+ * product.save((error, saved)=> { ... });
  *
  */
 const localize = optns => {
@@ -110,12 +106,12 @@ const localize = optns => {
   const { locales, ...schemaTypeOptions } = options;
 
   // prepare & normalize locales
-  let copyOfLocales = uniq([...(!_.isEmpty(locales) ? locales : LOCALES)]);
-  copyOfLocales = _.compact(_.map(copyOfLocales, mapLocaleToSchemaTypeOptions));
+  let copyOfLocales = uniq([...(!isEmpty(locales) ? locales : LOCALES)]);
+  copyOfLocales = compact(map(copyOfLocales, mapLocaleToSchemaTypeOptions));
 
   // prepare per locale schema fields
   const fields = {};
-  _.forEach(copyOfLocales, locale => {
+  forEach(copyOfLocales, locale => {
     const { name, ...localeOptions } = locale;
     fields[name] = mergeObjects(schemaTypeOptions, localeOptions);
   });
@@ -127,4 +123,157 @@ const localize = optns => {
   return schema;
 };
 
-export default localize;
+/**
+ * @function unlocalize
+ * @name unlocalize
+ * @description Flatten a given localized schema path value
+ * to unlocalized object
+ * @param {string} path prefix to used on unlocalized key
+ * @param {object} data object to unlocalized
+ * @returns {object} unlocalize schema paths
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const obj = unlocalize('group',{ en: 'One', sw: 'Moja' });
+ * // => { group_en: 'One', group_sw: 'Moja' };
+ */
+const unlocalize = (path, data = {}, separator = '_') => {
+  // prepare unlocalized data
+  const unlocalized = {};
+
+  // prepare localized
+  const localized = copyInstance(data);
+
+  // unlocalize each locale for a path
+  forEach(localized, (value, locale) => {
+    // handle default locale
+    if (locale === DEFAULT_LOCALE) {
+      unlocalized[path] = value;
+    }
+
+    // handle other locales
+    const key = `${path}${separator}${locale}`;
+    unlocalized[key] = value;
+  });
+
+  // return unlocalized object
+  return mergeObjects(unlocalized);
+};
+
+/**
+ * @function localizedKeysFor
+ * @name localizedKeysFor
+ * @description Generate locale fields name of a given path
+ * @param {String} path valid schema path
+ * @return {Array} sorted set of localized fields
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * localizedKeysFor('name');
+ * // => ['name.en', 'name.sw']
+ *
+ */
+const localizedKeysFor = path => {
+  const fields = map(LOCALES, locale => `${path}.${locale}`);
+  return sortedUniq(fields);
+};
+
+/**
+ * @function localizedValuesFor
+ * @name localizedValuesFor
+ * @description Normalize given value to ensure all locales has value
+ * @param {Object|Schema} value valid localized values
+ * @return {Object} normalize localized values
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * localizedValuesFor({ en: 'Tomato' });
+ * // => {en: 'Tomato', sw: 'Tomato'}
+ *
+ * localizedValuesFor({ en: 'Tomato', sw: 'Nyanya' });
+ * // => {en: 'Tomato', sw: 'Nyanya'}
+ *
+ */
+const localizedValuesFor = (val = {}) => {
+  const value = {};
+  const defaultValue = val[DEFAULT_LOCALE] || first(values(copyInstance(val)));
+  forEach(LOCALES, locale => {
+    value[locale] = isNotValue(val[locale]) ? defaultValue : val[locale];
+  });
+  return value;
+};
+
+/**
+ * @function localizedAbbreviationsFor
+ * @name localizedAbbreviationsFor
+ * @description Generate localized abbreviation of a given localize value
+ * @param {Object|Schema} value valid localized values
+ * @return {Object} normalize localized abbreviation
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * localizedAbbreviationsFor({ en: 'Tomato' });
+ * // => {en: 'T', sw: 'T'}
+ *
+ * localizedAbbreviationsFor({ en: 'Tomato', sw: 'Nyanya' });
+ * // => {en: 'T', sw: 'N'}
+ *
+ */
+const localizedAbbreviationsFor = (val = {}) => {
+  const value = {};
+  const defaultValue = val[DEFAULT_LOCALE] || first(values(copyInstance(val)));
+  forEach(LOCALES, locale => {
+    const abbreviation = abbreviate(
+      isNotValue(val[locale]) ? defaultValue : val[locale]
+    );
+    value[locale] = abbreviation;
+  });
+  return compact(value);
+};
+
+/**
+ * @function localizedIndexesFor
+ * @name localizedIndexesFor
+ * @description Generate index definitions of a given localized path
+ * @return {Object} index definition
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * localizedIndexesFor('name');
+ * // => { 'name.en': 1 }
+ *
+ */
+const localizedIndexesFor = path => {
+  const indexes = {};
+  forEach(LOCALES, locale => {
+    indexes[`${path}.${locale}`] = 1;
+  });
+  return compact(indexes);
+};
+
+export { localize, localizedAbbreviationsFor, localizedIndexesFor, localizedKeysFor, localizedValuesFor, unlocalize };

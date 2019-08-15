@@ -1,3 +1,17 @@
+#### 0.4.0 (2019-08-15)
+
+##### Chores
+
+* **deps:**  force latest version ([6bdf6ce5](https://github.com/lykmapipo/mongoose-locale-schema/commit/6bdf6ce59dff2acc553011cacfcd49773e3fad85))
+
+##### New Features
+
+*  add localizedIndexesFor helper ([ce9a3252](https://github.com/lykmapipo/mongoose-locale-schema/commit/ce9a3252c783ebe56bf3c9c3e175a57e39bf6d20))
+*  add localizedAbbreviationFor helper ([57b1d3f9](https://github.com/lykmapipo/mongoose-locale-schema/commit/57b1d3f90ae2d44383bafa744a990f5a0c601f26))
+*  add unlocalize helper ([acbc4427](https://github.com/lykmapipo/mongoose-locale-schema/commit/acbc4427cd0f6bf0ebd647507c09864e9befeff7))
+*  add localizedKeysFor helper ([402ca4ab](https://github.com/lykmapipo/mongoose-locale-schema/commit/402ca4ab4eb241ef135f073bf6fefe0d634cc27e))
+*  add localized value helper ([c056c820](https://github.com/lykmapipo/mongoose-locale-schema/commit/c056c820a685765bc1e6fa8ea8352f1f3901486e))
+
 #### 0.3.5 (2019-08-14)
 
 ##### Chores
