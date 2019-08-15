@@ -6,6 +6,7 @@ import {
   localizedKeysFor,
   localizedValuesFor,
   localizedAbbreviationsFor,
+  localizedIndexesFor,
 } from '../src/index';
 
 describe('localize', () => {
@@ -243,5 +244,15 @@ describe('localize', () => {
     expect(value).to.exist.and.be.an('object');
     expect(value.en).to.not.exist;
     expect(value.sw).to.not.exist;
+  });
+
+  it('should derive indexes definition for localized path', () => {
+    expect(localizedIndexesFor).to.exist;
+    expect(localizedIndexesFor).to.be.a('function');
+
+    const indexes = localizedIndexesFor('name');
+    expect(indexes).to.exist.and.be.an('object');
+    expect(indexes['name.en']).to.exist.and.be.equal(1);
+    expect(indexes['name.sw']).to.exist.and.be.equal(1);
   });
 });

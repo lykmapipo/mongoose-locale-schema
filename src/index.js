@@ -265,3 +265,28 @@ export const localizedAbbreviationsFor = (val = {}) => {
   });
   return compact(value);
 };
+
+/**
+ * @function localizedIndexesFor
+ * @name localizedIndexesFor
+ * @description Generate index definitions of a given localized path
+ * @return {Object} index definition
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * localizedIndexesFor('name');
+ * // => { 'name.en': 1 }
+ *
+ */
+export const localizedIndexesFor = path => {
+  const indexes = {};
+  forEach(LOCALES, locale => {
+    indexes[`${path}.${locale}`] = 1;
+  });
+  return compact(indexes);
+};
