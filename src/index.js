@@ -133,6 +133,48 @@ export const localize = optns => {
 };
 
 /**
+ * @function unlocalize
+ * @name unlocalize
+ * @description Flatten a given localized schema path value
+ * to unlocalized object
+ * @param {string} path prefix to used on unlocalized key
+ * @param {object} data object to unlocalized
+ * @returns {object} unlocalize schema paths
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * const obj = unlocalize('group',{ en: 'One', sw: 'Moja' });
+ * // => { group_en: 'One', group_sw: 'Moja' };
+ */
+export const unlocalize = (path, data = {}, separator = '_') => {
+  // prepare unlocalized data
+  const unlocalized = {};
+
+  // prepare localized
+  const localized = copyInstance(data);
+
+  // unlocalize each locale for a path
+  forEach(localized, (value, locale) => {
+    // handle default locale
+    if (locale === DEFAULT_LOCALE) {
+      unlocalized[path] = value;
+    }
+
+    // handle other locales
+    const key = `${path}${separator}${locale}`;
+    unlocalized[key] = value;
+  });
+
+  // return unlocalized object
+  return mergeObjects(unlocalized);
+};
+
+/**
  * @function localizedKeysFor
  * @name localizedKeysFor
  * @description Generate locale fields name of a given path
