@@ -1,5 +1,4 @@
 import {
-  compact,
   first,
   forEach,
   isEmpty,
@@ -8,7 +7,14 @@ import {
   map,
   values,
 } from 'lodash';
-import { isNotValue, mergeObjects, uniq, sortedUniq } from '@lykmapipo/common';
+import {
+  compact,
+  isNotValue,
+  mergeObjects,
+  uniq,
+  sortedUniq,
+  abbreviate,
+} from '@lykmapipo/common';
 import { getString, getStrings } from '@lykmapipo/env';
 import { createSubSchema, copyInstance } from '@lykmapipo/mongoose-common';
 
@@ -225,4 +231,37 @@ export const localizedValuesFor = (val = {}) => {
     value[locale] = isNotValue(val[locale]) ? defaultValue : val[locale];
   });
   return value;
+};
+
+/**
+ * @function localizedAbbreviationsFor
+ * @name localizedAbbreviationsFor
+ * @description Generate localized abbreviation of a given localize value
+ * @param {Object|Schema} value valid localized values
+ * @return {Object} normalize localized abbreviation
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * localizedAbbreviationsFor({ en: 'Tomato' });
+ * // => {en: 'T', sw: 'T'}
+ *
+ * localizedAbbreviationsFor({ en: 'Tomato', sw: 'Nyanya' });
+ * // => {en: 'T', sw: 'N'}
+ *
+ */
+export const localizedAbbreviationsFor = (val = {}) => {
+  const value = {};
+  const defaultValue = val[DEFAULT_LOCALE] || first(values(copyInstance(val)));
+  forEach(LOCALES, locale => {
+    const abbreviation = abbreviate(
+      isNotValue(val[locale]) ? defaultValue : val[locale]
+    );
+    value[locale] = abbreviation;
+  });
+  return compact(value);
 };
