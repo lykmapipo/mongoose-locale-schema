@@ -1,6 +1,6 @@
 import { SchemaTypes, Schema } from '@lykmapipo/mongoose-common';
-import { expect } from '@lykmapipo/mongoose-test-helpers';
-import localize from '../src/index';
+import { expect, faker } from '@lykmapipo/mongoose-test-helpers';
+import { localize, localizedValuesFor } from '../src/index';
 
 describe('localize', () => {
   it('should be a factory function', () => {
@@ -163,5 +163,33 @@ describe('localize', () => {
     expect(sw.options.index).to.be.undefined;
     expect(sw.options.searchable).to.be.true;
     expect(sw.options.taggable).to.be.true;
+  });
+
+  it('should normalize value for all locales', () => {
+    expect(localizedValuesFor).to.exist;
+    expect(localizedValuesFor).to.be.a('function');
+
+    let val = { en: faker.name.findName() };
+    let value = localizedValuesFor(val);
+    expect(value).to.exist.and.be.an('object');
+    expect(value.en).to.be.eql(val.en);
+    expect(value.sw).to.be.eql(val.en);
+
+    val = { sw: faker.name.findName() };
+    value = localizedValuesFor(val);
+    expect(value).to.exist.and.be.an('object');
+    expect(value.en).to.be.eql(val.sw);
+    expect(value.sw).to.be.eql(val.sw);
+
+    val = { en: faker.name.findName(), sw: faker.name.findName() };
+    value = localizedValuesFor(val);
+    expect(value).to.exist.and.be.an('object');
+    expect(value.en).to.be.eql(val.en);
+    expect(value.sw).to.be.eql(val.sw);
+
+    value = localizedValuesFor(undefined);
+    expect(value).to.exist.and.be.an('object');
+    expect(value.en).to.not.exist;
+    expect(value.sw).to.not.exist;
   });
 });

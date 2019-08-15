@@ -1,14 +1,16 @@
 import {
   compact,
+  first,
   forEach,
   isEmpty,
   isString,
   isPlainObject,
   map,
+  values,
 } from 'lodash';
-import { mergeObjects, uniq } from '@lykmapipo/common';
+import { isNotValue, mergeObjects, uniq } from '@lykmapipo/common';
 import { getString, getStrings } from '@lykmapipo/env';
-import { createSubSchema } from '@lykmapipo/mongoose-common';
+import { createSubSchema, copyInstance } from '@lykmapipo/mongoose-common';
 
 /* prepare */
 const DEFAULT_LOCALE = getString('DEFAULT_LOCALE', 'en');
@@ -107,7 +109,7 @@ const mapLocaleToSchemaTypeOptions = locale => {
  * product.save((error, saved)=> { ... });
  *
  */
-const localize = optns => {
+export const localize = optns => {
   // normalize options
   const options = mergeObjects(SCHEMATYPE_DEFAULTS, optns);
   const { locales, ...schemaTypeOptions } = options;
@@ -130,5 +132,32 @@ const localize = optns => {
   return schema;
 };
 
-/* export localize */
-export default localize;
+/**
+ * @function localizedValuesFor
+ * @name localizedValuesFor
+ * @description Normalize given value to ensure all locales has value
+ * @param {Object|Schema} value valid localized values
+ * @return {Object} normalize localized values
+ * @author lally elias <lallyelias87@gmail.com>
+ * @license MIT
+ * @since 0.4.0
+ * @version 0.1.0
+ * @static
+ * @public
+ * @example
+ *
+ * localizedValuesFor({ en: 'Tomato' });
+ * // => {en: 'Tomato', sw: 'Tomato'}
+ *
+ * localizedValuesFor({ en: 'Tomato', sw: 'Nyanya' });
+ * // => {en: 'Tomato', sw: 'Nyanya'}
+ *
+ */
+export const localizedValuesFor = (val = {}) => {
+  const value = {};
+  const defaultValue = val[DEFAULT_LOCALE] || first(values(copyInstance(val)));
+  forEach(LOCALES, locale => {
+    value[locale] = isNotValue(val[locale]) ? defaultValue : val[locale];
+  });
+  return value;
+};
