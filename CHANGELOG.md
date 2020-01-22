@@ -1,3 +1,9 @@
+#### 0.4.11 (2020-01-22)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([f4936117](https://github.com/lykmapipo/mongoose-locale-schema/commit/f49361178a2b503d8546596cec1e94c31907af2e))
+
 #### 0.4.10 (2020-01-17)
 
 ##### Chores
