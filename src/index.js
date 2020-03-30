@@ -53,7 +53,7 @@ const SCHEMATYPE_DEFAULTS = {
  * //=> { name: 'en', required: true }
  *
  */
-const mapLocaleToSchemaTypeOptions = locale => {
+const mapLocaleToSchemaTypeOptions = (locale) => {
   // handle: string locale definition
   if (isString(locale)) {
     const required = locale === DEFAULT_LOCALE;
@@ -115,7 +115,7 @@ const mapLocaleToSchemaTypeOptions = locale => {
  * product.save((error, saved)=> { ... });
  *
  */
-export const localize = optns => {
+export const localize = (optns) => {
   // normalize options
   const options = mergeObjects(SCHEMATYPE_DEFAULTS, optns);
   const { locales, ...schemaTypeOptions } = options;
@@ -126,7 +126,7 @@ export const localize = optns => {
 
   // prepare per locale schema fields
   const fields = {};
-  forEach(copyOfLocales, locale => {
+  forEach(copyOfLocales, (locale) => {
     const { name, ...localeOptions } = locale;
     fields[name] = mergeObjects(schemaTypeOptions, localeOptions);
   });
@@ -198,8 +198,8 @@ export const unlocalize = (path, data = {}, separator = '_') => {
  * // => ['name.en', 'name.sw']
  *
  */
-export const localizedKeysFor = path => {
-  const fields = map(LOCALES, locale => `${path}.${locale}`);
+export const localizedKeysFor = (path) => {
+  const fields = map(LOCALES, (locale) => `${path}.${locale}`);
   return sortedUniq(fields);
 };
 
@@ -227,7 +227,7 @@ export const localizedKeysFor = path => {
 export const localizedValuesFor = (val = {}) => {
   const value = {};
   const defaultValue = val[DEFAULT_LOCALE] || first(values(copyInstance(val)));
-  forEach(LOCALES, locale => {
+  forEach(LOCALES, (locale) => {
     value[locale] = isNotValue(val[locale]) ? defaultValue : val[locale];
   });
   return value;
@@ -257,7 +257,7 @@ export const localizedValuesFor = (val = {}) => {
 export const localizedAbbreviationsFor = (val = {}) => {
   const value = {};
   const defaultValue = val[DEFAULT_LOCALE] || first(values(copyInstance(val)));
-  forEach(LOCALES, locale => {
+  forEach(LOCALES, (locale) => {
     const abbreviation = abbreviate(
       isNotValue(val[locale]) ? defaultValue : val[locale]
     );
@@ -283,9 +283,9 @@ export const localizedAbbreviationsFor = (val = {}) => {
  * // => { 'name.en': 1 }
  *
  */
-export const localizedIndexesFor = path => {
+export const localizedIndexesFor = (path) => {
   const indexes = {};
-  forEach(LOCALES, locale => {
+  forEach(LOCALES, (locale) => {
     indexes[`${path}.${locale}`] = 1;
   });
   return compact(indexes);
