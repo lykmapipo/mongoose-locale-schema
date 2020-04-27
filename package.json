@@ -1,6 +1,6 @@
 {
   "name": "mongoose-locale-schema",
-  "version": "0.4.18",
+  "version": "0.4.19",
   "description": "mongoose schema to support multi-locale fields",
   "main": "lib/index.js",
   "module": "es/index.js",
