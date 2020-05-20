@@ -53,7 +53,7 @@
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
     "@commitlint/travis-cli": "^8.3.5",
-    "@lykmapipo/mongoose-test-helpers": "^0.7.46",
+    "@lykmapipo/mongoose-test-helpers": "^0.7.47",
     "chai": "^4.2.0",
     "commitizen": "^4.1.2",
     "cz-conventional-changelog": "^3.2.0",
@@ -62,26 +62,26 @@
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-mocha": "^6.3.0",
+    "eslint-plugin-mocha": "^7.0.0",
     "eslint-plugin-prettier": "^3.1.3",
     "generate-changelog": "^1.8.0",
     "handlebars": "^4.7.6",
     "husky": "^4.2.5",
-    "lint-staged": "^10.2.2",
+    "lint-staged": "^10.2.4",
     "mocha": "^7.1.2",
-    "mongoose": ">=5.9.13",
+    "mongoose": ">=5.9.15",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
-    "rollup": "^2.8.2",
+    "rollup": "^2.10.5",
     "shelljs": "^0.8.4"
   },
   "peerDependencies": {
-    "mongoose": ">=5.9.13"
+    "mongoose": ">=5.9.15"
   },
   "dependencies": {
-    "@lykmapipo/common": ">=0.33.2",
-    "@lykmapipo/env": ">=0.17.5",
-    "@lykmapipo/mongoose-common": ">=0.34.1",
+    "@lykmapipo/common": ">=0.34.1",
+    "@lykmapipo/env": ">=0.17.6",
+    "@lykmapipo/mongoose-common": ">=0.34.3",
     "lodash": ">=4.17.15"
   },
   "engines": {
