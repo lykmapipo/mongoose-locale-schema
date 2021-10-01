@@ -10,7 +10,7 @@
 [![Code Style](https://badgen.net/badge/code%20style/airbnb/ff5a5f?icon=airbnb)](https://github.com/airbnb/javascript)
 [![npm version](https://img.shields.io/npm/v/mongoose-locale-schema)](https://www.npmjs.com/package/mongoose-locale-schema)
 
-Additional mongoose schema validations.
+mongoose schema to support multi-locale fields.
 
 ## Requirements
 
