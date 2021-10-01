@@ -18,8 +18,8 @@ const SCHEMATYPE_DEFAULTS = {
  * @function mapLocaleToSchemaTypeOptions
  * @name mapLocaleToSchemaTypeOptions
  * @description Map provided locale options to valid schematype options
- * @param {Object|String} locale valid locale to use as schema field
- * @return {Object} valid schematype options
+ * @param {object | string} locale valid locale to use as schema field
+ * @returns {object} valid schematype options
  * @author lally elias <lallyelias87@mail.com>
  * @license MIT
  * @since 0.3.0
@@ -36,9 +36,8 @@ const SCHEMATYPE_DEFAULTS = {
  *
  * const options = mapLocaleToSchemaTypeOptions({name: 'en', required: true });
  * //=> { name: 'en', required: true }
- *
  */
-const mapLocaleToSchemaTypeOptions = locale => {
+const mapLocaleToSchemaTypeOptions = (locale) => {
   // handle: string locale definition
   if (isString(locale)) {
     const required = locale === DEFAULT_LOCALE;
@@ -59,9 +58,9 @@ const mapLocaleToSchemaTypeOptions = locale => {
  * @function localize
  * @name localize
  * @description factory to create localized schema fields
- * @param {Object} [options] valid mongoose schema type options
- * @param {Array} [options.locales] valid mongoose schema type options
- * @return {Schema} valid mongoose sub schema
+ * @param {object} [optns] valid mongoose schema type options
+ * @param {Array} [optns.locales] valid mongoose schema type options
+ * @returns {object} valid mongoose sub schema
  * @see {@link http://mongoosejs.com/docs/schematypes.html}
  * @see {@link http://mongoosejs.com/docs/subdocs.html}
  * @author lally elias <lallyelias87@mail.com>
@@ -98,9 +97,8 @@ const mapLocaleToSchemaTypeOptions = locale => {
  *
  * // save with multiple locales
  * product.save((error, saved)=> { ... });
- *
  */
-const localize = optns => {
+const localize = (optns) => {
   // normalize options
   const options = mergeObjects(SCHEMATYPE_DEFAULTS, optns);
   const { locales, ...schemaTypeOptions } = options;
@@ -111,7 +109,7 @@ const localize = optns => {
 
   // prepare per locale schema fields
   const fields = {};
-  forEach(copyOfLocales, locale => {
+  forEach(copyOfLocales, (locale) => {
     const { name, ...localeOptions } = locale;
     fields[name] = mergeObjects(schemaTypeOptions, localeOptions);
   });
@@ -130,6 +128,7 @@ const localize = optns => {
  * to unlocalized object
  * @param {string} path prefix to used on unlocalized key
  * @param {object} data object to unlocalized
+ * @param {string} separator a valid path separator. Default to `_`
  * @returns {object} unlocalize schema paths
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
@@ -169,8 +168,8 @@ const unlocalize = (path, data = {}, separator = '_') => {
  * @function localizedKeysFor
  * @name localizedKeysFor
  * @description Generate locale fields name of a given path
- * @param {String} path valid schema path
- * @return {Array} sorted set of localized fields
+ * @param {string} path valid schema path
+ * @returns {Array} sorted set of localized fields
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.4.0
@@ -181,10 +180,9 @@ const unlocalize = (path, data = {}, separator = '_') => {
  *
  * localizedKeysFor('name');
  * // => ['name.en', 'name.sw']
- *
  */
-const localizedKeysFor = path => {
-  const fields = map(LOCALES, locale => `${path}.${locale}`);
+const localizedKeysFor = (path) => {
+  const fields = map(LOCALES, (locale) => `${path}.${locale}`);
   return sortedUniq(fields);
 };
 
@@ -192,8 +190,8 @@ const localizedKeysFor = path => {
  * @function localizedValuesFor
  * @name localizedValuesFor
  * @description Normalize given value to ensure all locales has value
- * @param {Object|Schema} value valid localized values
- * @return {Object} normalize localized values
+ * @param {object} val valid localized values or schema
+ * @returns {object} normalize localized values
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.4.0
@@ -207,12 +205,11 @@ const localizedKeysFor = path => {
  *
  * localizedValuesFor({ en: 'Tomato', sw: 'Nyanya' });
  * // => {en: 'Tomato', sw: 'Nyanya'}
- *
  */
 const localizedValuesFor = (val = {}) => {
   const value = {};
   const defaultValue = val[DEFAULT_LOCALE] || first(values(copyInstance(val)));
-  forEach(LOCALES, locale => {
+  forEach(LOCALES, (locale) => {
     value[locale] = isNotValue(val[locale]) ? defaultValue : val[locale];
   });
   return value;
@@ -222,8 +219,8 @@ const localizedValuesFor = (val = {}) => {
  * @function localizedAbbreviationsFor
  * @name localizedAbbreviationsFor
  * @description Generate localized abbreviation of a given localize value
- * @param {Object|Schema} value valid localized values
- * @return {Object} normalize localized abbreviation
+ * @param {object} val valid localized values or schema
+ * @returns {object} normalize localized abbreviation
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.4.0
@@ -237,12 +234,11 @@ const localizedValuesFor = (val = {}) => {
  *
  * localizedAbbreviationsFor({ en: 'Tomato', sw: 'Nyanya' });
  * // => {en: 'T', sw: 'N'}
- *
  */
 const localizedAbbreviationsFor = (val = {}) => {
   const value = {};
   const defaultValue = val[DEFAULT_LOCALE] || first(values(copyInstance(val)));
-  forEach(LOCALES, locale => {
+  forEach(LOCALES, (locale) => {
     const abbreviation = abbreviate(
       isNotValue(val[locale]) ? defaultValue : val[locale]
     );
@@ -255,7 +251,8 @@ const localizedAbbreviationsFor = (val = {}) => {
  * @function localizedIndexesFor
  * @name localizedIndexesFor
  * @description Generate index definitions of a given localized path
- * @return {Object} index definition
+ * @param {string} path valid schema path
+ * @returns {object} index definition
  * @author lally elias <lallyelias87@gmail.com>
  * @license MIT
  * @since 0.4.0
@@ -266,11 +263,10 @@ const localizedAbbreviationsFor = (val = {}) => {
  *
  * localizedIndexesFor('name');
  * // => { 'name.en': 1 }
- *
  */
-const localizedIndexesFor = path => {
+const localizedIndexesFor = (path) => {
   const indexes = {};
-  forEach(LOCALES, locale => {
+  forEach(LOCALES, (locale) => {
     indexes[`${path}.${locale}`] = 1;
   });
   return compact(indexes);
